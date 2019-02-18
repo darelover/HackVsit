@@ -10,6 +10,7 @@ import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.android.volley.DefaultRetryPolicy;
@@ -31,6 +32,7 @@ import java.util.HashMap;
 public class MainActivity extends AppCompatActivity {
     TextView nature;
     String url;
+    ProgressBar pb;
     RequestQueue queue;
 
     @Override
@@ -38,6 +40,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         queue = Volley.newRequestQueue(this);
+        pb=findViewById(R.id.pb);
 
 
         url = new String("http://192.168.20.139:8000/predict");
@@ -115,9 +118,11 @@ public class MainActivity extends AppCompatActivity {
     }
     void rp(String s)
     {
+
         HashMap<String,String> hashMap=new HashMap<>();
         hashMap.put("plant_image","FuckOff;base64,"+s);
         JSONObject jsonObject=new JSONObject(hashMap);
+        pb.setVisibility(View.VISIBLE);
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
                 (Request.Method.POST, url, jsonObject, new Response.Listener<JSONObject>() {
 
@@ -128,6 +133,7 @@ public class MainActivity extends AppCompatActivity {
                         try {
                             s =response.get("data").toString();
                         }catch (JSONException e){}
+                        pb.setVisibility(View.GONE);
 
                         nature.setVisibility(View.VISIBLE);
 
